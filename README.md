@@ -1,10 +1,11 @@
 # 自动农场更新下载
 
+**平台约定：自 2026-10-13 起仅维护 Android APK 和游戏内增量补丁；网页版已停止维护并关闭公开访问。后续下载与发布均不依赖试玩站。**
+
 当前基座：**v0.63.0（Android 63001，ARM64）**。
 
 - [下载 APK（约 90 MB）](https://github.com/liuqinh2s/auto-farm-updates/releases/download/android-63001/auto-farm-v0.63.0-android-arm64.apk)
 - [发布说明与校验信息](https://github.com/liuqinh2s/auto-farm-updates/releases/tag/android-63001)
-- [同版网页试玩](https://auto-farm.liuqinh2s.chatgpt.site)
 
 先覆盖安装这版 APK 一次，沿用原试玩签名和包名。保留 v0.62 的四页菜单、固定场景与现有存档。此后在「设置 → 游戏更新」确认下载兼容的内容补丁，下载并校验完成后，下次启动生效。没有补丁时会显示当前已是最新版本；网络失败时仍可继续游玩。
 
