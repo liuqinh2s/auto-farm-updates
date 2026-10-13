@@ -1,0 +1,23 @@
+name: Publish verified Android base
+on:
+  push:
+    paths: ['releases/android-63001.json', '.github/workflows/import-base.yml', 'tools/import_base.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: android-63001-base-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch and verify immutable build parts
+        run: python3 tools/import_base.py
+      - name: Publish base APK and cumulative patch baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create android-63001 build/auto-farm-v0.63.0-android-arm64.apk build/android-base.zip build/release-verification.json --repo "$GITHUB_REPOSITORY" --title '自动农场 v0.63.0 · 增量更新基座' --notes '首次覆盖安装此 APK，沿用原试玩签名。后续兼容内容更新可在游戏设置中确认下载。保留 v0.62 四页菜单、固定场景和存档。已通过导出包启动与自动检查，未做手机真机测试。'
