@@ -2,7 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
-import urllib.request
+import subprocess
 
 spec = json.loads(Path('releases/android-63001.json').read_text())
 assert spec['base_version'] == 'android-63001'
@@ -16,11 +16,12 @@ for item in spec['files']:
     with (output / item['name']).open('wb') as target:
         for part in item['parts']:
             assert part.startswith('https://auto-farm.liuqinh2s.chatgpt.site/downloads/android-63001/')
-            with urllib.request.urlopen(part, timeout=60) as response:
-                while block := response.read(1024 * 1024):
-                    size += len(block)
-                    assert size <= item['size'], 'Oversized download'
-                    digest.update(block)
-                    target.write(block)
+            block = subprocess.check_output(['curl', '--fail', '--silent', '--show-error',
+                '--location', '--retry', '3', '--connect-timeout', '15', '--max-time', '120',
+                '--max-filesize', str(8 * 1024 * 1024), part])
+            size += len(block)
+            assert size <= item['size'], 'Oversized download'
+            digest.update(block)
+            target.write(block)
     assert size == item['size'] and digest.hexdigest() == item['sha256'], 'Download checksum mismatch'
     print('Verified', item['name'], size)
